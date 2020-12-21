@@ -1,7 +1,7 @@
 {
     "name": "sura/menu",
     "description": "The Sura menu.",
-    "keywords": ["menu"],
+    "keywords": ["menu", "navigation"],
     "license": "MIT",
     "authors": [
       {
