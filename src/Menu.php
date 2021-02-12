@@ -56,6 +56,10 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
     protected $htmlAttributes;
     protected $parentAttributes;
 
+    /**
+     * Menu constructor.
+     * @param Item ...$items
+     */
     protected function __construct(Item ...$items)
     {
         $this->items = $items;
