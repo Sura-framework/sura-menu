@@ -12,16 +12,22 @@ class Reflection
 {
     public static function firstParameterType(callable $callable): string
     {
-        $reflection = is_object($callable)
-            ? (new ReflectionObject($callable))->getMethod('__invoke')
-            : new ReflectionFunction($callable);
+        try {
+            $reflection = is_object($callable)
+                ? (new ReflectionObject((object)$callable))->getMethod('__invoke')
+                : new ReflectionFunction($callable);
+        } catch (\ReflectionException $e) {
+        }
 
         $parameters = $reflection->getParameters();
 
         $parameterTypes = array_map(function (ReflectionParameter $parameter) {
-            $class = $parameter->getType() && ! $parameter->getType()->isBuiltin()
-                ? new ReflectionClass($parameter->getType()->getName())
-                : null;
+            try {
+                $class = $parameter->getType() && !$parameter->getType()->isBuiltin()//FIXME
+                    ? new ReflectionClass($parameter->getType()->getName())
+                    : null;
+            } catch (\Exception $e) {
+            }
 
             return $class ? $class->name : null;
         }, $parameters);
