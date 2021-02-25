@@ -2,6 +2,8 @@
 
 namespace Sura\Menu\Html;
 
+use JetBrains\PhpStorm\Pure;
+
 class Tag
 {
     /** @var string */
@@ -16,7 +18,7 @@ class Tag
         $this->attributes = $attributes ?: new Attributes();
     }
 
-    public static function make(string $tagName, Attributes $attributes = null)
+    public static function make(string $tagName, Attributes $attributes = null): Tag
     {
         return new self($tagName, $attributes);
     }
@@ -30,7 +32,7 @@ class Tag
         return $this->open().$contents.$this->close();
     }
 
-    public function open(): string
+    #[Pure] public function open(): string
     {
         if ($this->attributes->isEmpty()) {
             return "<{$this->tagName}>";

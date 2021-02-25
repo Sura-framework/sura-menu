@@ -5,10 +5,10 @@ namespace Sura\Menu\Html;
 class Attributes
 {
     /** @var array */
-    protected $attributes = [];
+    protected array $attributes = [];
 
     /** @var array */
-    protected $classes = [];
+    protected array $classes = [];
 
     public function __construct(array $attributes = [])
     {
@@ -20,7 +20,7 @@ class Attributes
      *
      * @return $this
      */
-    public function setAttributes(array $attributes)
+    public function setAttributes(array $attributes): static
     {
         foreach ($attributes as $attribute => $value) {
             if ($attribute === 'class') {
@@ -46,7 +46,7 @@ class Attributes
      *
      * @return $this
      */
-    public function setAttribute(string $attribute, string $value = '')
+    public function setAttribute(string $attribute, string $value = ''): static
     {
         if ($attribute === 'class') {
             $this->addClass($value);
@@ -64,7 +64,7 @@ class Attributes
      *
      * @return $this
      */
-    public function addClass($class)
+    public function addClass(array|string $class): static
     {
         if (! is_array($class)) {
             $class = [$class];
@@ -82,7 +82,7 @@ class Attributes
      *
      * @return $this
      */
-    public function mergeWith(self $attributes)
+    public function mergeWith(self $attributes): static
     {
         $this->attributes = array_merge($this->attributes, $attributes->attributes);
         $this->classes = array_merge($this->classes, $attributes->classes);
