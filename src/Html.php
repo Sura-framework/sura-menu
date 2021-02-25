@@ -39,7 +39,7 @@ class Html implements Item, Activatable, HasParentAttributes
      *
      * @return static
      */
-    public static function raw(string $html)
+    public static function raw(string $html): static
     {
         return new static($html);
     }
@@ -49,7 +49,7 @@ class Html implements Item, Activatable, HasParentAttributes
      *
      * @return static
      */
-    public static function empty()
+    public static function empty(): static
     {
         return new static('');
     }
