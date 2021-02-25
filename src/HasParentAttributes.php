@@ -18,19 +18,19 @@ interface HasParentAttributes
      *
      * @return $this
      */
-    public function setParentAttribute(string $attribute, string $value = '');
+    public function setParentAttribute(string $attribute, string $value = ''): static;
 
     /**
      * @param array $attributes
      *
      * @return $this
      */
-    public function setParentAttributes(array $attributes);
+    public function setParentAttributes(array $attributes): static;
 
     /**
      * @param string $class
      *
      * @return $this
      */
-    public function addParentClass(string $class);
+    public function addParentClass(string $class): static;
 }
