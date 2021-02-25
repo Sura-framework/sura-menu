@@ -75,7 +75,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return static
      */
-    public static function new($items = [])
+    public static function new($items = []): static
     {
         return new static(...array_values($items));
     }
@@ -91,7 +91,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return static
      */
-    public static function build($items, callable $callback, self $initial = null)
+    public static function build($items, callable $callback, self $initial = null): static
     {
         return ($initial ?: static::new())->fill($items, $callback);
     }
@@ -106,7 +106,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return static
      */
-    public function fill($items, callable $callback)
+    public function fill($items, callable $callback): Menu|static
     {
         $menu = $this;
 
@@ -125,7 +125,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function add(Item $item)
+    public function add(Item $item): static
     {
         foreach ($this->filters as $filter) {
             $this->applyFilter($filter, $item);
@@ -144,7 +144,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function addIf($condition, Item $item)
+    public function addIf($condition, Item $item): static
     {
         if ($this->resolveCondition($condition)) {
             $this->add($item);
@@ -161,7 +161,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function link(string $url, string $text)
+    public function link(string $url, string $text): static
     {
         return $this->add(Link::to($url, $text));
     }
@@ -171,7 +171,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function empty()
+    public function empty(): static
     {
         return $this->add(Html::empty());
     }
@@ -185,7 +185,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function linkIf($condition, string $url, string $text)
+    public function linkIf($condition, string $url, string $text): static
     {
         if ($this->resolveCondition($condition)) {
             $this->link($url, $text);
@@ -202,7 +202,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function html(string $html, array $parentAttributes = [])
+    public function html(string $html, array $parentAttributes = []): static
     {
         return $this->add(Html::raw($html)->setParentAttributes($parentAttributes));
     }
@@ -216,7 +216,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function htmlIf($condition, string $html, array $parentAttributes = [])
+    public function htmlIf($condition, string $html, array $parentAttributes = []): static
     {
         if ($this->resolveCondition($condition)) {
             $this->html($html, $parentAttributes);
@@ -231,7 +231,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function submenu($header, $menu = null)
+    public function submenu($header, $menu = null): static
     {
         [$header, $menu] = $this->parseSubmenuArgs(func_get_args());
 
@@ -247,7 +247,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function submenuIf($condition, $header, $menu = null)
+    public function submenuIf($condition, $header, $menu = null): static
     {
         if ($condition) {
             $this->submenu($header, $menu);
@@ -304,7 +304,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function each(callable $callable)
+    public function each(callable $callable): static
     {
         $type = Reflection::firstParameterType($callable);
 
