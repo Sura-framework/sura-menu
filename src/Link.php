@@ -52,7 +52,7 @@ class Link implements Item, HasHtmlAttributes, HasParentAttributes, Activatable
      *
      * @return static
      */
-    public static function to(string $url, string $text)
+    public static function to(string $url, string $text): static
     {
         return new static($url, $text);
     }
