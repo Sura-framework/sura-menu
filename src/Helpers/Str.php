@@ -2,11 +2,13 @@
 
 namespace Sura\Menu\Helpers;
 
+use JetBrains\PhpStorm\Pure;
+
 class Str
 {
     public static function startsWith(string $haystack, string $needle): bool
     {
-        if ($needle != '' && substr($haystack, 0, strlen($needle)) === $needle) {
+        if ($needle != '' && str_starts_with($haystack, $needle)) {
             return true;
         }
 
@@ -22,7 +24,7 @@ class Str
         return self::replaceFirst($remove, '', $subject);
     }
 
-    public static function replaceFirst(string $search, string $replace, string $subject): string
+    #[Pure] public static function replaceFirst(string $search, string $replace, string $subject): string
     {
         $position = strpos($subject, $search);
 
@@ -33,16 +35,16 @@ class Str
         return $subject;
     }
 
-    public static function ensureLeft(string $pattern, string $subject): string
+    #[Pure] public static function ensureLeft(string $pattern, string $subject): string
     {
-        if (strpos($subject, $pattern) === 0) {
+        if (str_starts_with($subject, $pattern)) {
             return $subject;
         }
 
         return $pattern.$subject;
     }
 
-    public static function ensureRight(string $pattern, string $subject): string
+    #[Pure] public static function ensureRight(string $pattern, string $subject): string
     {
         if (strrpos($subject, $pattern) === strlen($subject) - 1) {
             return $subject;
