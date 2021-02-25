@@ -13,7 +13,7 @@ trait HasTextAttributes
      *
      * @return $this
      */
-    public function prepend($prepend)
+    public function prepend($prepend): static
     {
         $this->prepend = $prepend;
 
@@ -29,7 +29,7 @@ trait HasTextAttributes
      *
      * @return $this
      */
-    public function prependIf($condition, $prepend)
+    public function prependIf(mixed $condition, Item|string $prepend): static
     {
         if ($this->resolveCondition($condition)) {
             return $this->prepend($prepend);
@@ -45,7 +45,7 @@ trait HasTextAttributes
      *
      * @return $this
      */
-    public function append($append)
+    public function append(Item|string $append): static
     {
         $this->append = $append;
 
@@ -61,7 +61,7 @@ trait HasTextAttributes
      *
      * @return static
      */
-    public function appendIf($condition, $append)
+    public function appendIf(bool $condition, Item|string $append): static
     {
         if ($this->resolveCondition($condition)) {
             return $this->append($append);
