@@ -2,6 +2,7 @@
 
 namespace Sura\Menu\Traits;
 
+use JetBrains\PhpStorm\Pure;
 use Sura\Menu\ActiveUrlChecker;
 use Sura\Menu\ExactUrlChecker;
 
@@ -15,7 +16,7 @@ trait Activatable
     /**
      * @var bool
      */
-    protected $exactActive = false;
+    protected bool $exactActive = false;
 
     /**
      * @return bool
@@ -30,7 +31,7 @@ trait Activatable
      *
      * @return $this
      */
-    public function setActive($active = true)
+    public function setActive($active = true): static
     {
         if (is_callable($active)) {
             $this->active = $active($this);
@@ -46,7 +47,7 @@ trait Activatable
     /**
      * @return $this
      */
-    public function setInactive()
+    public function setInactive(): static
     {
         $this->active = false;
 
@@ -56,7 +57,7 @@ trait Activatable
     /**
      * @return string|null
      */
-    public function url()
+    public function url(): ?string
     {
         return $this->url;
     }
@@ -64,7 +65,7 @@ trait Activatable
     /**
      * @return bool
      */
-    public function hasUrl(): bool
+    #[Pure] public function hasUrl(): bool
     {
         return ! is_null($this->url);
     }
@@ -74,7 +75,7 @@ trait Activatable
      *
      * @return $this
      */
-    public function setUrl($url)
+    public function setUrl(?string $url): static
     {
         $this->url = $url;
 
@@ -109,7 +110,7 @@ trait Activatable
      *
      * @return $this
      */
-    public function setExactActive(bool $exactActive = true)
+    public function setExactActive(bool $exactActive = true): static
     {
         $this->exactActive = $exactActive;
 

@@ -9,17 +9,17 @@ interface Activatable
      *
      * @return $this
      */
-    public function setActive($active = true);
+    public function setActive($active = true): static;
 
     /**
      * @return $this
      */
-    public function setInactive();
+    public function setInactive(): static;
 
     /**
      * @return string|null
      */
-    public function url();
+    public function url(): ?string;
 
     /**
      * @return bool
@@ -31,7 +31,7 @@ interface Activatable
      *
      * @return $this
      */
-    public function setUrl($url);
+    public function setUrl($url): static;
 
     /**
      * @param string $url
