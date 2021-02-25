@@ -328,7 +328,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function registerFilter(callable $callable)
+    public function registerFilter(callable $callable): static
     {
         $this->filters[] = $callable;
 
@@ -361,7 +361,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function applyToAll(callable $callable)
+    public function applyToAll(callable $callable): static
     {
         $this->each($callable);
         $this->registerFilter($callable);
@@ -378,7 +378,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function wrap(string $element, $attributes = [])
+    public function wrap(string $element, $attributes = []): static
     {
         $this->wrap = [$element, $attributes];
 
@@ -434,7 +434,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function setActive($urlOrCallable, string $root = '/')
+    public function setActive($urlOrCallable, string $root = '/'): static
     {
         if (is_string($urlOrCallable)) {
             return $this->setActiveFromUrl($urlOrCallable, $root);
@@ -454,7 +454,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function setExactActiveClass(string $class)
+    public function setExactActiveClass(string $class): static
     {
         $this->exactActiveClass = $class;
 
@@ -476,7 +476,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function setActiveFromUrl(string $url, string $root = '/')
+    public function setActiveFromUrl(string $url, string $root = '/'): static
     {
         $this->applyToAll(function (Menu $menu) use ($url, $root) {
             $menu->setActiveFromUrl($url, $root);
@@ -498,7 +498,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function setActiveFromCallable(callable $callable)
+    public function setActiveFromCallable(callable $callable): static
     {
         $this->applyToAll(function (Menu $menu) use ($callable) {
             $menu->setActiveFromCallable($callable);
@@ -516,7 +516,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
             if ($callable($item)) {
                 $item->setActive();
                 /** @psalm-suppress UndefinedInterfaceMethod */
-                $item->setExactActive();
+                $item->setExactActive();//FIXME method not found
             }
         });
 
