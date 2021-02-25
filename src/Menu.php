@@ -5,6 +5,7 @@ namespace Sura\Menu;
 use ArrayIterator;
 use Countable;
 use IteratorAggregate;
+use JetBrains\PhpStorm\Pure;
 use Sura\Menu\Helpers\Reflection;
 use Sura\Menu\Html\Attributes;
 use Sura\Menu\Html\Tag;
@@ -530,7 +531,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function setActiveClass(string $class)
+    public function setActiveClass(string $class): static
     {
         $this->activeClass = $class;
 
@@ -544,7 +545,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function addItemClass(string $class)
+    public function addItemClass(string $class): static
     {
         $this->applyToAll(function (HasHtmlAttributes $link) use ($class) {
             $link->addClass($class);
@@ -561,7 +562,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function setItemAttribute(string $attribute, string $value = '')
+    public function setItemAttribute(string $attribute, string $value = ''): static
     {
         $this->applyToAll(function (HasHtmlAttributes $link) use ($attribute, $value) {
             $link->setAttribute($attribute, $value);
@@ -577,7 +578,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function addItemParentClass(string $class)
+    public function addItemParentClass(string $class): static
     {
         $this->applyToAll(function (HasParentAttributes $item) use ($class) {
             $item->addParentClass($class);
@@ -594,7 +595,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function setItemParentAttribute(string $attribute, string $value = '')
+    public function setItemParentAttribute(string $attribute, string $value = ''): static
     {
         $this->applyToAll(function (HasParentAttributes $item) use ($attribute, $value) {
             $item->setParentAttribute($attribute, $value);
@@ -609,7 +610,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      * @param string|null $wrapperTagName
      * @return $this
      */
-    public function setWrapperTag($wrapperTagName = null)
+    public function setWrapperTag($wrapperTagName = null): static
     {
         $this->wrapperTagName = $wrapperTagName;
 
@@ -622,7 +623,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      * @param string|null $wrapperTagName
      * @return $this
      */
-    public function withoutWrapperTag()
+    public function withoutWrapperTag(): static
     {
         $this->wrapperTagName = null;
 
@@ -635,7 +636,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      * @param string|null $parentTagName
      * @return $this
      */
-    public function setParentTag($parentTagName = null)
+    public function setParentTag($parentTagName = null): static
     {
         $this->parentTagName = $parentTagName;
 
@@ -647,7 +648,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function withoutParentTag()
+    public function withoutParentTag(): static
     {
         $this->parentTagName = null;
 
@@ -660,7 +661,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      * @param $activeClassOnLink
      * @return $this
      */
-    public function setActiveClassOnLink(bool $activeClassOnLink = true)
+    public function setActiveClassOnLink(bool $activeClassOnLink = true): static
     {
         $this->activeClassOnLink = $activeClassOnLink;
 
@@ -673,7 +674,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      * @param $activeClassOnParent
      * @return $this
      */
-    public function setActiveClassOnParent(bool $activeClassOnParent = true)
+    public function setActiveClassOnParent(bool $activeClassOnParent = true): static
     {
         $this->activeClassOnParent = $activeClassOnParent;
 
@@ -686,7 +687,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function if(bool $condition, callable $callable)
+    public function if(bool $condition, callable $callable): Menu|static
     {
         return $condition ? $callable($this) : $this;
     }
@@ -696,7 +697,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return static
      */
-    public function blueprint()
+    public function blueprint(): static
     {
         $clone = new static();
 
@@ -772,6 +773,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
 
     /**
      * @param Item $item
+     * @return Item
      */
     protected function renderActiveClassOnLink(Item $item): Item
     {
@@ -792,7 +794,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return int
      */
-    public function count(): int
+    #[Pure] public function count(): int
     {
         return count($this->items);
     }
