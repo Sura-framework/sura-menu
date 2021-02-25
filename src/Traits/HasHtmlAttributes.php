@@ -15,7 +15,7 @@ trait HasHtmlAttributes
      *
      * @return $this
      */
-    public function setAttribute(string $attribute, string $value = '')
+    public function setAttribute(string $attribute, string $value = ''): static
     {
         $this->htmlAttributes->setAttribute($attribute, $value);
 
@@ -27,7 +27,7 @@ trait HasHtmlAttributes
      *
      * @return $this
      */
-    public function setAttributes(array $attributes)
+    public function setAttributes(array $attributes): static
     {
         $this->htmlAttributes->setAttributes($attributes);
 
@@ -39,7 +39,7 @@ trait HasHtmlAttributes
      *
      * @return $this
      */
-    public function addClass(string $class)
+    public function addClass(string $class): static
     {
         $this->htmlAttributes->addClass($class);
 
