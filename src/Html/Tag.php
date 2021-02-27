@@ -7,10 +7,10 @@ use JetBrains\PhpStorm\Pure;
 class Tag
 {
     /** @var string */
-    protected $tagName;
+    protected string $tagName;
 
     /** @var \Sura\Menu\Html\Attributes */
-    protected $attributes;
+    protected Attributes $attributes;
 
     public function __construct(string $tagName, Attributes $attributes = null)
     {
@@ -23,7 +23,7 @@ class Tag
         return new self($tagName, $attributes);
     }
 
-    public function withContents($contents): string
+    #[Pure] public function withContents($contents): string
     {
         if (is_array($contents)) {
             $contents = implode('', $contents);

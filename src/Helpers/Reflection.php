@@ -19,9 +19,9 @@ class Reflection
         } catch (\ReflectionException $e) {
         }
 
-        $parameters = $reflection->getParameters();
+        $parameters = $reflection->getParameters(); //FIXME $reflection undefined
 
-        $parameterTypes = array_map(function (ReflectionParameter $parameter) {
+        $parameterTypes = array_map(static function (ReflectionParameter $parameter) {
             try {
                 $class = $parameter->getType() && !$parameter->getType()->isBuiltin()//FIXME
                     ? new ReflectionClass($parameter->getType()->getName())

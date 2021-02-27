@@ -15,7 +15,7 @@ class Arr
 
     public static function push(array $array, $item): array
     {
-        array_push($array, $item);
+        $array[] = $item;
 
         return $array;
     }
