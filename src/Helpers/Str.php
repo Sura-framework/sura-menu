@@ -6,16 +6,12 @@ use JetBrains\PhpStorm\Pure;
 
 class Str
 {
-    public static function startsWith(string $haystack, string $needle): bool
+    #[Pure] public static function startsWith(string $haystack, string $needle): bool
     {
-        if ($needle != '' && str_starts_with($haystack, $needle)) {
-            return true;
-        }
-
-        return false;
+        return $needle != '' && str_starts_with($haystack, $needle);
     }
 
-    public static function removeFromStart(string $remove, string $subject): string
+    #[Pure] public static function removeFromStart(string $remove, string $subject): string
     {
         if (! self::startsWith($subject, $remove)) {
             return $subject;
