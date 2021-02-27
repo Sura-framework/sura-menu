@@ -13,7 +13,7 @@ trait HasTextAttributes
      *
      * @return $this
      */
-    public function prepend($prepend): static
+    public function prepend(Item|string $prepend): static
     {
         $this->prepend = $prepend;
 

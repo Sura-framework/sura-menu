@@ -27,11 +27,11 @@ interface Activatable
     public function hasUrl(): bool;
 
     /**
-     * @param string|null $url
+     * @param string $url
      *
      * @return $this
      */
-    public function setUrl($url): static;
+    public function setUrl(string $url): static;
 
     /**
      * @param string $url

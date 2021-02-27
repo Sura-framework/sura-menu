@@ -18,21 +18,21 @@ class Link implements Item, HasHtmlAttributes, HasParentAttributes, Activatable
     use HasAttributesTrait;
 
     /** @var string */
-    protected $text;
+    protected string $text;
 
     /** @var string|null */
-    protected $url = null;
+    protected ?string $url = '';
 
     /** @var string */
-    protected $prepend;
-    protected $append = '';
+    protected string $prepend;
+    protected string $append = '';
 
     /** @var bool */
-    protected $active = false;
+    protected bool $active = false;
 
     /** @var \Sura\Menu\Html\Attributes */
-    protected $htmlAttributes;
-    protected $parentAttributes;
+    protected Attributes $htmlAttributes;
+    protected Attributes $parentAttributes;
 
     /**
      * @param string $url

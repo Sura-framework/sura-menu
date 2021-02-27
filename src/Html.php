@@ -12,16 +12,16 @@ class Html implements Item, Activatable, HasParentAttributes
     use HasParentAttributesTrait;
 
     /** @var string */
-    protected $html;
+    protected string $html;
 
     /** @var string|null */
-    protected $url = null;
+    protected string $url = '';
 
     /** @var bool */
-    protected $active = false;
+    protected bool $active = false;
 
     /** @var \Sura\Menu\Html\Attributes */
-    protected $parentAttributes;
+    protected Attributes $parentAttributes;
 
     /**
      * @param string $html
