@@ -4,6 +4,8 @@ namespace Sura\Menu;
 
 use ArrayIterator;
 use Countable;
+use InvalidArgumentException;
+use Iterator;
 use IteratorAggregate;
 use JetBrains\PhpStorm\Pure;
 use Sura\Menu\Helpers\Reflection;
@@ -23,39 +25,39 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
     use HasAttributesTrait;
 
     /** @var array */
-    protected $items = [];
+    protected array $items = [];
 
     /** @var array */
-    protected $filters = [];
+    protected array $filters = [];
 
     /** @var string|Item */
-    protected $prepend;
-    protected $append = '';
+    protected Item|string $prepend;
+    protected string $append = '';
 
     /** @var array */
-    protected $wrap = [];
+    protected array $wrap = [];
 
     /** @var string */
-    protected $activeClass = 'active';
+    protected string $activeClass = 'active';
 
     /** @var string */
-    protected $exactActiveClass = 'exact-active';
+    protected string $exactActiveClass = 'exact-active';
 
     /** @var string */
-    protected $wrapperTagName = 'ul';
+    protected string $wrapperTagName = 'ul';
 
     /** @var string|null */
-    protected $parentTagName = 'li';
+    protected ?string $parentTagName = 'li';
 
     /** @var bool */
-    protected $activeClassOnParent = true;
+    protected bool $activeClassOnParent = true;
 
     /** @var bool */
-    protected $activeClassOnLink = false;
+    protected bool $activeClassOnLink = false;
 
     /** @var \Sura\Menu\Html\Attributes */
-    protected $htmlAttributes;
-    protected $parentAttributes;
+    protected Attributes $htmlAttributes;
+    protected Attributes $parentAttributes;
 
     /**
      * Menu constructor.
@@ -86,13 +88,13 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      * the accumulator, the array item as the second parameter, and the item's
      * key as the third.
      *
-     * @param array|\Iterator $items
+     * @param array|Iterator $items
      * @param callable $callback
      * @param \Sura\Menu\Menu|null $initial
      *
      * @return static
      */
-    public static function build($items, callable $callback, self $initial = null): static
+    public static function build(Iterator|array $items, callable $callback, self $initial = null): static
     {
         return ($initial ?: static::new())->fill($items, $callback);
     }
@@ -102,12 +104,12 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      * the accumulator, the array item as the second parameter, and the item's
      * key as the third.
      *
-     * @param array|\Iterator $items
+     * @param array|Iterator $items
      * @param callable $callback
      *
      * @return static
      */
-    public function fill($items, callable $callback): Menu|static
+    public function fill(Iterator|array $items, callable $callback): Menu|static
     {
         $menu = $this;
 
@@ -145,7 +147,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function addIf($condition, Item $item): static
+    public function addIf(bool $condition, Item $item): static
     {
         if ($this->resolveCondition($condition)) {
             $this->add($item);
@@ -186,7 +188,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function linkIf($condition, string $url, string $text): static
+    public function linkIf(bool $condition, string $url, string $text): static
     {
         if ($this->resolveCondition($condition)) {
             $this->link($url, $text);
@@ -217,7 +219,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function htmlIf($condition, string $html, array $parentAttributes = []): static
+    public function htmlIf(bool $condition, string $html, array $parentAttributes = []): static
     {
         if ($this->resolveCondition($condition)) {
             $this->html($html, $parentAttributes);
@@ -228,11 +230,11 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
 
     /**
      * @param callable|\Sura\Menu\Menu|\Sura\Menu\Item $header
-     * @param callable|\Sura\Menu\Menu|null $menu
+     * @param null $menu
      *
      * @return $this
      */
-    public function submenu($header, $menu = null): static
+    public function submenu(callable|Menu|Item $header, $menu = null): static
     {
         [$header, $menu] = $this->parseSubmenuArgs(func_get_args());
 
@@ -244,11 +246,11 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
     /**
      * @param bool $condition
      * @param callable|\Sura\Menu\Menu|\Sura\Menu\Item $header
-     * @param callable|\Sura\Menu\Menu|null $menu
+     * @param null $menu
      *
      * @return $this
      */
-    public function submenuIf($condition, $header, $menu = null): static
+    public function submenuIf(bool $condition, callable|Menu|Item $header, $menu = null): static
     {
         if ($condition) {
             $this->submenu($header, $menu);
@@ -271,7 +273,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return \Sura\Menu\Menu
      */
-    protected function createSubmenuMenu($menu): self
+    protected function createSubmenuMenu(callable|Menu $menu): self
     {
         if (is_callable($menu)) {
             $transformer = $menu;
@@ -287,7 +289,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return string
      */
-    protected function createSubmenuHeader($header): string
+    protected function createSubmenuHeader(Item|string $header): string
     {
         if ($header instanceof Item) {
             $header = $header->render();
@@ -399,11 +401,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
             }
         }
 
-        if ($this->prepend && $this->prepend instanceof Item && $this->prepend->isActive()) {
-            return true;
-        }
-
-        return false;
+        return $this->prepend && $this->prepend instanceof Item && $this->prepend->isActive();
     }
 
     /**
@@ -435,7 +433,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      *
      * @return $this
      */
-    public function setActive($urlOrCallable, string $root = '/'): static
+    public function setActive(callable|string $urlOrCallable, string $root = '/'): static
     {
         if (is_string($urlOrCallable)) {
             return $this->setActiveFromUrl($urlOrCallable, $root);
@@ -445,7 +443,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
             return $this->setActiveFromCallable($urlOrCallable);
         }
 
-        throw new \InvalidArgumentException('`setActive` requires a pattern or a callable');
+        throw new InvalidArgumentException('`setActive` requires a pattern or a callable');
     }
 
     /**
@@ -479,7 +477,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      */
     public function setActiveFromUrl(string $url, string $root = '/'): static
     {
-        $this->applyToAll(function (Menu $menu) use ($url, $root) {
+        $this->applyToAll(static function (Menu $menu) use ($url, $root) {
             $menu->setActiveFromUrl($url, $root);
         });
 
@@ -487,7 +485,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
             $this->prepend->determineActiveForUrl($url, $root);
         }
 
-        $this->applyToAll(function (Activatable $item) use ($url, $root) {
+        $this->applyToAll(static function (Activatable $item) use ($url, $root) {
             $item->determineActiveForUrl($url, $root);
         });
 
@@ -501,13 +499,13 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      */
     public function setActiveFromCallable(callable $callable): static
     {
-        $this->applyToAll(function (Menu $menu) use ($callable) {
+        $this->applyToAll(static function (Menu $menu) use ($callable) {
             $menu->setActiveFromCallable($callable);
         });
 
         $type = Reflection::firstParameterType($callable);
 
-        $this->applyToAll(function (Activatable $item) use ($callable, $type) {
+        $this->applyToAll(static function (Activatable $item) use ($callable, $type) {
 
             /** @var \Sura\Menu\Activatable|\Sura\Menu\Item $item */
             if (! Reflection::itemMatchesType($item, $type)) {
@@ -547,7 +545,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      */
     public function addItemClass(string $class): static
     {
-        $this->applyToAll(function (HasHtmlAttributes $link) use ($class) {
+        $this->applyToAll(static function (HasHtmlAttributes $link) use ($class) {
             $link->addClass($class);
         });
 
@@ -564,7 +562,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      */
     public function setItemAttribute(string $attribute, string $value = ''): static
     {
-        $this->applyToAll(function (HasHtmlAttributes $link) use ($attribute, $value) {
+        $this->applyToAll(static function (HasHtmlAttributes $link) use ($attribute, $value) {
             $link->setAttribute($attribute, $value);
         });
 
@@ -580,7 +578,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      */
     public function addItemParentClass(string $class): static
     {
-        $this->applyToAll(function (HasParentAttributes $item) use ($class) {
+        $this->applyToAll(static function (HasParentAttributes $item) use ($class) {
             $item->addParentClass($class);
         });
 
@@ -597,7 +595,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      */
     public function setItemParentAttribute(string $attribute, string $value = ''): static
     {
-        $this->applyToAll(function (HasParentAttributes $item) use ($attribute, $value) {
+        $this->applyToAll(static function (HasParentAttributes $item) use ($attribute, $value) {
             $item->setParentAttribute($attribute, $value);
         });
 
@@ -607,10 +605,10 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
     /**
      * Set tag for items wrapper.
      *
-     * @param string|null $wrapperTagName
+     * @param string $wrapperTagName
      * @return $this
      */
-    public function setWrapperTag($wrapperTagName = null): static
+    public function setWrapperTag($wrapperTagName = ''): static
     {
         $this->wrapperTagName = $wrapperTagName;
 
@@ -625,7 +623,7 @@ class Menu implements Item, Countable, HasHtmlAttributes, HasParentAttributes, I
      */
     public function withoutWrapperTag(): static
     {
-        $this->wrapperTagName = null;
+        $this->wrapperTagName = '';
 
         return $this;
     }
