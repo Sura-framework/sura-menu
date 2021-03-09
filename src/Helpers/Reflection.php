@@ -10,6 +10,10 @@ use Sura\Menu\Item;
 
 class Reflection
 {
+    /**
+     * @param callable $callable
+     * @return string
+     */
     public static function firstParameterType(callable $callable): string
     {
         try {
@@ -17,6 +21,7 @@ class Reflection
                 ? (new ReflectionObject((object)$callable))->getMethod('__invoke')
                 : new ReflectionFunction($callable);
         } catch (\ReflectionException $e) {
+            $reflection = (object) array();
         }
 
         $parameters = $reflection->getParameters(); //FIXME $reflection undefined
@@ -35,6 +40,11 @@ class Reflection
         return $parameterTypes[0] ?? '';
     }
 
+    /**
+     * @param Item $item
+     * @param string $type
+     * @return bool
+     */
     public static function itemMatchesType(Item $item, string $type): bool
     {
         if ($type === '') {

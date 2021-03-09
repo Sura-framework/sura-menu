@@ -90,11 +90,17 @@ class Attributes
         return $this;
     }
 
+    /**
+     * @return bool
+     */
     public function isEmpty(): bool
     {
         return empty($this->attributes) && empty($this->classes);
     }
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         if (empty($this->classes)) {
@@ -104,6 +110,9 @@ class Attributes
         return array_merge($this->attributes, ['class' => implode(' ', $this->classes)]);
     }
 
+    /**
+     * @return string
+     */
     public function toString(): string
     {
         if ($this->isEmpty()) {
@@ -125,6 +134,9 @@ class Attributes
         return implode(' ', $attributeStrings);
     }
 
+    /**
+     * @return string
+     */
     public function __toString(): string
     {
         return $this->toString();
